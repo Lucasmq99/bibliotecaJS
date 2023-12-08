@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBLIOTECA</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: aliceblue;
+            text-align: center;
+            font-weight: bolder;
+        }
+
+        .btns {
+            text-align: center;
+        }
+
+        button {
+            display: block;
+            text-align: center;
+            background-color: blueviolet;
+            width: 30vh;
+            height: 10vh;
+            border: 5px solid black;
+            border-radius: 20px;
+            margin: 20px;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bolder;
+            word-spacing: 1px;
+            color: aliceblue;
+        }
+
+        button:hover {
+            background-color: lightskyblue;
+            transition: background 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>BIBLIOTECA</h1>
+    <div class="btns">
+        <button onclick="adicionarUsuario()">Adicionar Usuário</button>
+        <button onclick="adicionarLivro()"> Adicionar Livro</button>
+        <button onclick="adicionarRevista()">Adicionar Revista</button>
+        <button onclick="listarAcervo()">Listar Acervo</button>
+        <button onclick="emprestarItem()">Emprestar Item</button>
+        <button onclick="devolverItem()">Devolver Item</button>
+    </div>
+
+    <script src="biblioteca.js"></script>
+    <script>
+        // const usuario1 = new Usuario("Joao Silva", "12345", "1990-05-15");
+        // const usuario2 = new Usuario("Maria Oliveira", "67890", "1985-10-22");
+
+        const biblioteca = new Biblioteca();
+
+        function adicionarUsuario() {
+            const nome = prompt("Digite o nome do usuário:");
+            if (nome === null || nome === "") {
+                console.log("Inserção de usuário cancelada.");
+                return;
+            }
+            const registroAcademico = prompt("Digite o registro acadêmico do usuário:");
+            if (registroAcademico === null || registroAcademico === "") {
+                console.log("Inserção de usuário cancelada.");
+                return;
+            }
+            const dataNascimento = prompt("Digite a data de nascimento do usuário(ex 1995-12-25):");
+            if (dataNascimento === null || dataNascimento === "") {
+                console.log("Inserção de usuário cancelada.");
+                return;
+            }
+
+            const usuario = new Usuario(nome, registroAcademico, dataNascimento);
+            biblioteca.adicionarUsuario(usuario);
+
+            confirm("Usuário adicionado com sucesso!");
+        }
+
+        function adicionarLivro() {
+            const titulo = prompt("Digite o título do livro:");
+            if (titulo === null || titulo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const autor = prompt("Digite o autor do livro:");
+            if (autor === null || autor === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const anoPublicacao = prompt("Digite o ano de publicação do livro:");
+            if (anoPublicacao === null || anoPublicacao === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const codigo = prompt("Digite o código do livro:");
+            if (codigo === null || codigo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const genero = prompt("Digite o gênero do livro(ficçao cientifica, terror, comedia, suspense, drama, historia, policial):");
+            if (genero === null || genero === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            
+            const livro = new Livro(titulo, autor, parseInt(anoPublicacao), codigo, genero);
+            biblioteca.adicionarItem(livro);
+
+            confirm("Livro adicionado com sucesso!");
+        }
+
+        function adicionarRevista() {
+            const titulo = prompt("Digite o título da revista:");
+            if (titulo === null || titulo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const autor = prompt("Digite o autor da revista:");
+            if (autor === null || autor === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const anoPublicacao = prompt("Digite o ano de publicação da revista:");
+            if (anoPublicacao === null || anoPublicacao === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const codigo = prompt("Digite o código da revista:");
+            if (codigo === null || codigo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const edicao = prompt("Digite a edição da revista:");
+            if (edicao === null || edicao === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+
+            const revista = new Revista(titulo, autor, parseInt(anoPublicacao), codigo, edicao);
+            biblioteca.adicionarItem(revista);
+
+            confirm("Revista adicionada com sucesso!");
+        }
+
+        function listarAcervo() {
+            biblioteca.listarAcervo();
+        }
+
+        function emprestarItem() {
+            const codigo = prompt("Digite o código do item a ser emprestado:");
+            if (codigo === null || codigo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            const registroAcademico = prompt("Digite o registro acadêmico do usuário:");
+            if (registroAcademico === null || registroAcademico === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            biblioteca.emprestarItem(codigo, registroAcademico);
+        }
+
+        function devolverItem() {
+            const codigo = prompt("Digite o código do item a ser devolvido:");
+            if (codigo === null || codigo === "") {
+                console.log("Inserção da revista cancelada.");
+                return;
+            }
+            biblioteca.devolverItem(codigo);
+        }
+
+        async function obterDadosDaAPI() {
+            try {
+                const resposta = await fetch("https://api-biblioteca-mb6w.onrender.com/acervo"); // API
+                const acervoAPI = await resposta.json();
+                return acervoAPI;
+            } catch (erro) {
+                console.error(`Erro ao obter dados do acervo da API:`, erro.message);
+                return [];
+            }
+        }
+
+        async function inicializadorAcervoBiblioteca() {
+
+            const acervoAPI = await obterDadosDaAPI();
+            
+            await biblioteca.popularAcervo(acervoAPI);
+        }
+        inicializadorAcervoBiblioteca();
+    </script>
+</body>
+
+</html>
